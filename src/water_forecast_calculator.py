@@ -11,7 +11,6 @@ class WaterForecastCalculator:
 
     def align_data(self):
         try:
-            # Ensure 'Day' and 'Hour' in both datasets are in a consistent format
             self.demand_data['Day'] = self.demand_data['Day'].astype(str)
             self.demand_data['Hour'] = self.demand_data['Hour'].astype(str)
             self.availability_data['Day'] = self.availability_data['Day'].astype(str)
