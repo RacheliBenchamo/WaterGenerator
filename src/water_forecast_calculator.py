@@ -1,4 +1,6 @@
 import pandas as pd
+import matplotlib.pyplot as plt
+from matplotlib.ticker import MaxNLocator
 
 
 class WaterForecastCalculator:
@@ -22,23 +24,47 @@ class WaterForecastCalculator:
             print(f"Error aligning data: {e}")
             self.aligned_data = pd.DataFrame()  # Assign empty DataFrame in case of error
 
-    def save_forecast_to_excel(self, filename='Water_Forecast.xlsx'):
-        # Check if forecast data is available
-        if self.forecast_df.empty:
-            print("Forecast data is empty. Please calculate the forecast first.")
-            return
+    def _create_combo_chart(self, filename):
+        try:
+            if self.forecast_df.empty:
+                print("No forecast data available for chart creation.")
+                return
 
-        # Save the forecast DataFrame to an Excel file
-        self.forecast_df.to_excel(filename, index=False)
-        print(f"Forecast data saved to '{filename}'.")
+            ax = self.forecast_df.plot(kind='bar', x='Hour', y='Water Supplied to the Network', color='blue', label='Water Supplied')
+            self.forecast_df.plot(kind='line', x='Hour', y='City Demand', color='red', label='City Demand', ax=ax)
+
+            ax.set_xlabel('Hour')
+            ax.set_ylabel('Volume')
+            ax.set_title('Water Supply vs Demand Over Time')
+            ax.xaxis.set_major_locator(MaxNLocator(integer=True))  # to use only integer labels on x-axis
+
+            plt.savefig(filename)
+            plt.close()
+        except Exception as e:
+            print(f"Error creating combo chart: {e}")
+
+    def save_forecast_to_excel(self, excel_filename='Water_Forecast.xlsx', chart_filename='Water_Forecast_Chart.png'):
+        try:
+            if self.forecast_df.empty:
+                print("Forecast data is empty. Please calculate the forecast first.")
+                return
+
+            # Save the forecast DataFrame to an Excel file
+            self.forecast_df.to_excel(excel_filename, index=False)
+            print(f"Forecast data saved to '{excel_filename}'.")
+
+            # Create and save the chart
+            self._create_combo_chart(chart_filename)
+            print(f"Chart saved to '{chart_filename}'.")
+        except Exception as e:
+            print(f"Error saving forecast data: {e}")
 
     def calculate_forecast(self):
-        # Check if aligned data is available and not empty
-        if self.aligned_data is None or self.aligned_data.empty:
-            print("Aligned data is not available or is empty. Cannot calculate forecast.")
-            return
-
         try:
+            # Check if aligned data is available and not empty
+            if self.aligned_data is None or self.aligned_data.empty:
+                print("Aligned data is not available or is empty. Cannot calculate forecast.")
+                return
             # Initialize an empty DataFrame for the forecast with the required columns
             columns = ['Day', 'Hour', 'Water Availability', 'City Demand', 'Water Supplied to the Network',
                        'Water Reservoir Level']
