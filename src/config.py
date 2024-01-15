@@ -1,7 +1,7 @@
 # file paths
-DEMAND_FILE_PATH = 'resources/Demand.xlsx'
-WATER_AVAILABILITY_FILE_PATH = 'resources/Water_Availability.xlsx'
-CONSTANTS_FILE_PATH = 'resources/Constants.xlsx'
+DEMAND_FILE_PATH = '../resources/Demand.xlsx'
+WATER_AVAILABILITY_FILE_PATH = '../resources/Water_Availability.xlsx'
+CONSTANTS_FILE_PATH = '../resources/Constants.xlsx'
 
 # Default values
 DEFAULT_RESERVOIR_LEVEL = 0
